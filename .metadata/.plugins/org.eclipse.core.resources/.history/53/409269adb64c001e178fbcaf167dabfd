@@ -1,0 +1,95 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Application</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark" style="background-color: black">
+            <div>
+                <a href="https://javaguides.net" class="navbar-brand"> App</a>
+            </div>
+
+            <ul>
+                <li><a href="<%=request.getContextPath() %>/list" class="nav-link">Users</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <div class="container col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <form id="userForm" method="post">
+                <caption>
+                    <h2>
+                        <script>
+                            var user = ${user != null ? 'edit' : 'add'};
+                            document.write(user.charAt(0).toUpperCase() + user.slice(1) + " User");
+                        </script>
+                    </h2>
+                </caption>
+
+                <script>
+                    var user = ${user != null ? 'edit' : 'add'};
+                    if (user != 'edit') {
+                        document.getElementById("userForm").action = "insert";
+                    } else {
+                        document.getElementById("userForm").action = "update";
+                    }
+                </script>
+
+                <input type="hidden" name="id" id="userId" value="${user != null ? user.id : ''}" />
+
+                <fieldset class="form-group">
+                    <label>First name</label>
+                    <input type="text" class="form-control" name="firstname" id="firstname"
+                        value="${user != null ? user.firstname : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Last name</label>
+                    <input type="text" class="form-control" name="lastname" id="lastname"
+                        value="${user != null ? user.lastname : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Address</label>
+                    <input type="text" class="form-control" name="address" id="address"
+                        value="${user != null ? user.address : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="city" id="city"
+                        value="${user != null ? user.city : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>State</label>
+                    <input type="text" class="form-control" name="state" id="state"
+                        value="${user != null ? user.state : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Email</label>
+                    <input type="text" class="form-control" name="email" id="email"
+                        value="${user != null ? user.email : ''}" />
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" name="phone" id="phone"
+                        value="${user != null ? user.phone : ''}" />
+                </fieldset>
+
+                <button type="submit" class="btn btn-success">Create</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

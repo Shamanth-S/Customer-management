@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer List</title>
+    <style>
+        /* Add your CSS styles here */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .action-buttons button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer List</h1>
+    <button onclick="location.href='add_customer.html'">Add Customer</button>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="customer-list">
+            <!-- Customer data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Mock customer data (you should fetch real data from your database)
+        const customers = [
+            { id: 1, firstName: 'John', lastName: 'Doe', address: '123 Main St', city: 'City', state: 'State', email: 'john@example.com', phone: '123-456-7890' },
+            { id: 2, firstName: 'Jane', lastName: 'Smith', address: '456 Elm St', city: 'City', state: 'State', email: 'jane@example.com', phone: '987-654-3210' }
+            // Add more customer objects as needed
+        ];
+
+        // Function to display customers in the table
+        function displayCustomers() {
+            const customerTable = document.getElementById('customer-list');
+            customerTable.innerHTML = ''; // Clear the table
+
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.firstName}</td>
+                    <td>${customer.lastName}</td>
+                    <td>${customer.address}</td>
+                    <td>${customer.city}</td>
+                    <td>${customer.state}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.phone}</td>
+                    <td class="action-buttons">
+                        <button onclick="editCustomer(${customer.id})">Edit</button>
+                        <button onclick="deleteCustomer(${customer.id})">Delete</button>
+                    </td>
+                `;
+                customerTable.appendChild(row);
+            });
+        }
+
+        // Function to delete a customer (in-memory)
+        function deleteCustomer(customerId) {
+            const index = customers.findIndex(customer => customer.id === customerId);
+            if (index !== -1) {
+                customers.splice(index, 1); // Remove the customer from the array
+                displayCustomers(); // Refresh the table
+            }
+        }
+
+        // Function to edit a customer (in-memory)
+        function editCustomer(customerId) {
+            // In a real application, you would navigate to an edit page
+            // Here, we'll just display a message
+            alert(`Editing customer with ID ${customerId}`);
+        }
+
+        // Initial display of customers
+        displayCustomers();
+    </script>
+</body>
+</html>

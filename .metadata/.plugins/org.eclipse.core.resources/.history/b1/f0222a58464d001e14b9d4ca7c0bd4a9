@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Customer</title>
+</head>
+<body class = "text-center">
+	<h1>Add Customer Details</h1>
+	<form method = "POST" action = "Customer">
+		<table width = "400px" border = "1">
+		
+			<tr>
+				<td>Id</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>First name</td>
+				<td><input type = "text" name = "firstname" id = "firstname"></td>
+			</tr>
+			
+			<tr>
+				<td>Last name</td>
+				<td><input type = "text" name = "lastname" id = "lastname"></td>
+			</tr>
+			
+			<tr>
+				<td>Address</td>
+				<td><input type = "text" name = "address" id = "address"></td>
+			</tr>
+			
+			<tr>
+				<td>City</td>
+				<td><input type = "text" name = "city" id = "city"></td>
+			</tr>
+			
+			<tr>
+				<td>State</td>
+				<td><input type = "text" name = "state" id = "state"></td>
+			</tr>
+			
+			<tr>
+				<td>Email</td>
+				<td><input type = "text" name = "email" id = "email"></td>
+			</tr>
+			
+			<tr>
+				<td>Phone</td>
+				<td><input type = "text" name = "phone" id = "phone"></td>
+			</tr>
+		</table><br>
+		<input type = "submit" value = "Submit">
+	</form>
+	<p><a href = "ViewCustomer">View Customers</a></p>
+</body>
+</html>

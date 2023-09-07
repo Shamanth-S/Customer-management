@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Application</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<header>
+		<nav class = "navbar navbar-expand-md navbar-dark" style = "background-color: black">
+			<div>
+				<a href = "https://javaguides.net" class = "navbar-brand"> App</a>
+			</div>
+			
+			<ul>
+				<li><a href = "<%=request.getContextPath() %>/list" class = "nav-link">Users</a></li>
+			</ul>
+		</nav>
+	</header>
+	<br>
+	<div class = "container col-md-5">
+		<div class = "card">
+			<div class = "card-body">
+				<c:if test = "${user != null}">
+					<form action = "update" method = "post">
+				</c:if>
+				<c:if test = "${user == null}">
+					<form action = "insert" method = "post">
+				</c:if>
+				
+				<caption>
+					<h2>
+						<c:if test = "${user != null}">
+							Edit User
+						</c:if>
+						<c:if test = "${user == null}">
+							Add New User
+						</c:if>
+					</h2>
+				</caption>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

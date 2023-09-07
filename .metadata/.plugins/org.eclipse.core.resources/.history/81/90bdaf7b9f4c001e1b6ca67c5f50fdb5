@@ -1,0 +1,72 @@
+package net.javaguides.usermanagement.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+import net.javaguides.usermanagement.model.User;
+
+public class UserDAO {
+	
+	private String JDBC_URL = "jdbc:mysql://localhost:3306/login_new";
+	private String JDBC_USERNAME = "root";
+	private String JDBC_PASSWORD = "root1234";
+	
+	private static final String INSERT_USERS = "INSERT INTO login_new.cust" + "(firstname, lastname, address, city, state, email, phone) VALUES" + "(?, ?, ?, ?, ?, ?, ?);";
+	private static final String SELECT_USERS = "SELECT id, firstname, lastname, address, city, state, email, phone FROM login_new.cust where id = ?;";
+	private static final String SELECT_ALL_USERS = "SELECT * FROM login_new.cust;";
+	private static final String DELETE_USERS = "DELETE FROM login_new.cust where id = ?;";
+	private static final String UPDATE_USERS = "UPDATE login_new.cust set firstname = ?, lastname = ?, address = ?, city = ?, state = ?, email = ?, phone = ? WHERE id = ?;";
+	
+	protected Connection getConnection() {
+		Connection conn = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+	
+	
+	//Create or insert user
+	public void insertUser(User user) throws Exception {
+		try(Connection conn = getConnection();
+				PreparedStatement ps = conn.prepareStatement(INSERT_USERS)) { 
+			ps.setString(1, user.getFirstname());
+			ps.setString(2, user.getLastname());
+			ps.setString(3, user.getAddress());
+			ps.setString(4, user.getCity());
+			ps.setString(5, user.getState());
+			ps.setString(6, user.getEmail());
+			ps.setLong(7, user.getPhone());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//Update user
+	public boolean updateUser(User user) throws Exception {
+		boolean rowUpdated = false;
+		try(Connection conn = getConnection();
+				PreparedStatement ps = conn.prepareStatement(UPDATE_USERS)) { 
+			ps.setString(1, user.getFirstname());
+			ps.setString(2, user.getLastname());
+			ps.setString(3, user.getAddress());
+			ps.setString(4, user.getCity());
+			ps.setString(5, user.getState());
+			ps.setString(6, user.getEmail());
+			ps.setLong(7, user.getPhone());
+			rowUpdated = ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rowUpdated;
+	}
+	
+	//Select user by id
+	//Select users
+	//Delete user
+}

@@ -1,0 +1,172 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/Customer")
+public class Customer extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    // JDBC URL, username, and password of MySQL server
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/login_new";
+    private static final String JDBC_USER = "root";
+    private static final String JDBC_PASSWORD = "root1234";
+
+    // CustomerData class to represent customer information
+    public static class CustomerData {
+        private int id;
+        private String firstName;
+        private String lastName;
+        private String address;
+        private String city;
+        private String state;
+        private String email;
+        private String phone;
+
+        // Constructors, getters, and setters for customer data fields
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        out.println("<html><head><title>Customer List</title></head><body>");
+        out.println("<h1>Customer List</h1>");
+        out.println("<button onclick=\"location.href='add_customer.html'\">Add Customer</button>");
+        out.println("<table>");
+        out.println("<thead><tr><th>First Name</th><th>Last Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Phone</th></tr></thead>");
+        out.println("<tbody>");
+
+        try {
+            // Load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish a connection to the MySQL database
+            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+            // SQL query to retrieve customer data
+            String sql = "SELECT * FROM cust";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Create a list to store customer data
+            List<CustomerData> customerList = new ArrayList<>();
+
+            // Populate the list with customer data from the database
+            while (resultSet.next()) {
+                CustomerData customer = new CustomerData();
+                customer.setFirstName(resultSet.getString("firstname"));
+                customer.setLastName(resultSet.getString("lastname"));
+                customer.setAddress(resultSet.getString("address"));
+                customer.setCity(resultSet.getString("city"));
+                customer.setState(resultSet.getString("state"));
+                customer.setEmail(resultSet.getString("email"));
+                customer.setPhone(resultSet.getString("phone"));
+                customerList.add(customer);
+            }
+
+            // Generate HTML table rows
+            for (CustomerData customer : customerList) {
+                out.println("<tr>");
+                out.println("<td>" + customer.getFirstName() + "</td>");
+                out.println("<td>" + customer.getLastName() + "</td>");
+                out.println("<td>" + customer.getAddress() + "</td>");
+                out.println("<td>" + customer.getCity() + "</td>");
+                out.println("<td>" + customer.getState() + "</td>");
+                out.println("<td>" + customer.getEmail() + "</td>");
+                out.println("<td>" + customer.getPhone() + "</td>");
+                out.println("</tr>");
+            }
+
+            // Close database connections
+            out.println("</tbody></table>");
+            out.println("</body></html>");
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            out.println("Error: " + e.getMessage());
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}

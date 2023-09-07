@@ -1,0 +1,67 @@
+<%@ page language = "java" contentType = "text/html; charset = ISO-8859-1" pageEncoding = "ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset = "ISO-8859-1">
+<title>Application</title>
+<link rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<header>
+		<nav class = "navbar navbar-expand-md navbar-dark" style = "background-color: black">
+			<div>
+				<a href = "https://javaguides.net" class = "navbar-brand"> App</a>
+			</div>
+			
+			<ul>
+				<li><a href = "<%=request.getContextPath() %>/list" class = "nav-link">Users</a></li>
+			</ul>
+		</nav>
+	</header>
+	<br>
+	<div class = "row">
+		<div class = "container">
+			<h3 class = "text-center">List of Users</h3>
+			<hr>
+			<div class = "container text-left">
+				<a href = "<%=request.getContextPath()%>/new" class = "btn btn-success">Add New User</a>
+			</div>
+			<br>
+			<table class = "table table-bordered">
+				<thread>
+					<tr>
+						<th>Id</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Address</th>
+						<th>City</th>
+						<th>State</th>
+						<th>Email</th>
+						<th>Phone</th>
+						<th>Actions</th>
+					</tr>
+				</thread>
+				<tbody>
+				<!-- for (Todo todo: todos { -->
+					<c:forEach var = "user" items = "${listUser}">
+						<tr>
+							<td><c:out value = "${user.id}"/></td>
+							<td><c:out value = "${user.firstname}"/></td>
+							<td><c:out value = "${user.lastname}"/></td>
+							<td><c:out value = "${user.address}"/></td>
+							<td><c:out value = "${user.city}"/></td>
+							<td><c:out value = "${user.state}"/></td>
+							<td><c:out value = "${user.email}"/></td>
+							<td><c:out value = "${user.phone}"/></td>
+							<td><a href = "edit?id = <c:out value = '${user.id}'/>">Edit</a>
+								<a href = "delete?id = <c:out value = '${user.id}'/>">Delete</a>
+							</td>
+						</tr>
+					</c:forEach>
+					<!-- } -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/Customer")
+public class Customer extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    // JDBC URL, username, and password of MySQL server
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
+    private static final String JDBC_USER = "your_username";
+    private static final String JDBC_PASSWORD = "your_password";
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        try {
+            // Load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish a connection to the MySQL database
+            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+            // SQL query to retrieve customer data
+            String sql = "SELECT * FROM customers";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Generate HTML table header
+            out.println("<html><head><title>Customer List</title></head><body>");
+            out.println("<h1>Customer List</h1>");
+            out.println("<table>");
+            out.println("<thead><tr><th>First Name</th><th>Last Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Phone</th></tr></thead>");
+            out.println("<tbody>");
+
+            // Populate the HTML table with database data
+            while (resultSet.next()) {
+                out.println("<tr>");
+                out.println("<td>" + resultSet.getString("first_name") + "</td>");
+                out.println("<td>" + resultSet.getString("last_name") + "</td>");
+                out.println("<td>" + resultSet.getString("address") + "</td>");
+                out.println("<td>" + resultSet.getString("city") + "</td>");
+                out.println("<td>" + resultSet.getString("state") + "</td>");
+                out.println("<td>" + resultSet.getString("email") + "</td>");
+                out.println("<td>" + resultSet.getString("phone") + "</td>");
+                out.println("</tr>");
+            }
+
+            // Close HTML table and database connections
+            out.println("</tbody></table>");
+            out.println("</body></html>");
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            out.println("Error: " + e.getMessage());
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}

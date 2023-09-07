@@ -1,0 +1,60 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/EditDetails")
+public class EditDetails extends HttpServlet{
+	
+	Connection conn;
+	PreparedStatement ps;
+	ResultSet rs;
+	int row;
+	
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException{
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String id = request.getParameter("id");
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_new","root","root1234");
+			
+			ps = conn.prepareStatement("select * from login_new.customer where id = ?");
+			ps.setString(1, id);
+			
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				out.println("<form action = 'EditDetails' method = 'POST'");
+				out.println("<table width = '400px' border = '1'>");
+				out.println("<tr><td>id : </td><td><input type = 'text' name = 'id' id = 'id' value = '"+ rs.getString("id") + "'/></td></tr><br>");
+				out.println("<tr><td>First Name : </td><td><input type = 'text' name = 'firstname' id = 'firstname' value = '"+ rs.getString("firstname") + "'/></td></tr><br>");
+				out.println("<tr><td>Last Name : </td><td><input type = 'text' name = 'lastname' id = 'lastname' value = '"+ rs.getString("lastname") + "'/></td></tr><br>");
+				out.println("<tr><td>Address : </td><td><input type = 'text' name = 'address' id = 'address' value = '"+ rs.getString("address") + "'/></td></tr><br>");
+				out.println("<tr><td>City : </td><td><input type = 'text' name = 'city' id = 'city' value = '"+ rs.getString("city") + "'/></td></tr><br>");
+				out.println("<tr><td>State : </td><td><input type = 'text' name = 'state' id = 'state' value = '"+ rs.getString("state") + "'/></td></tr><br>");
+				out.println("<tr><td>Email : </td><td><input type = 'text' name = 'email' id = 'email' value = '"+ rs.getString("email") + "'/></td></tr><br>");
+				out.println("<tr><td>Phone : </td><td><input type = 'text' name = 'phone' id = 'phone' value = '"+ rs.getString("phone") + "'/></td></tr><br>");
+				out.println("</table><br>");
+				out.println("<input type = 'submit' value = 'Edit'/>");
+				out.println("</form>");
+			}
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			out.print(e);
+		}
+	}
+}

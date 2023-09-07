@@ -1,0 +1,154 @@
+package net.javaguides.usermanagement.web;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import net.javaguides.usermanagement.dao.UserDAO;
+import net.javaguides.usermanagement.model.User;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+@WebServlet({"/new", "/insert", "/delete", "/edit", "/update", "/list"})
+
+public class UserServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private UserDAO userDAO;
+
+    public UserServlet() {
+        this.userDAO = new UserDAO();
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getPathInfo();
+        if (action == null) {
+            action = "/list";
+        }
+
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/insert":
+                    insertUser(request, response);
+                    break;
+                case "/delete":
+                    deleteUser(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateUser(request, response);
+                    break;
+                case "/list":
+                    listUser(request, response);
+                    break;
+                default:
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    private void listUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<User> listUser = userDAO.selectAllUser();
+        
+        // Create a JSON array to hold user objects
+        JSONArray jsonArray = new JSONArray();
+        
+        for (User user : listUser) {
+            // Create a JSON object for each user
+            JSONObject userObj = new JSONObject();
+            userObj.put("id", user.getId());
+            userObj.put("firstname", user.getFirstname());
+            userObj.put("lastname", user.getLastname());
+            userObj.put("address", user.getAddress());
+            userObj.put("city", user.getCity());
+            userObj.put("state", user.getState());
+            userObj.put("email", user.getEmail());
+            userObj.put("phone", user.getPhone());
+            
+            // Add the user object to the JSON array
+            jsonArray.put(userObj);
+        }
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        // Convert the JSON array to a string and send it as the response
+        response.getWriter().write(jsonArray.toString());
+    }
+
+
+    private void updateUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String id = request.getParameter("id");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        User user = new User(id, firstname, lastname, address, city, state, email, phone);
+        userDAO.updateUser(user);
+        response.sendRedirect("list");
+    }
+
+    private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.parseInt(request.getParameter("id"));
+        userDAO.deleteUser(id);
+        response.sendRedirect("list");
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("id");
+        User existingUser = userDAO.selectUser(id);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
+        request.setAttribute("user", existingUser);
+        dispatcher.forward(request, response);
+    }
+
+    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void insertUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        User newUser = new User(id, firstname, lastname, address, city, state, email, phone);
+        try {
+            userDAO.insertUser(newUser);
+            response.sendRedirect("list");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

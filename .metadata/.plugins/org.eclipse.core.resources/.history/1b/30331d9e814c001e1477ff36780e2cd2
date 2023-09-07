@@ -1,0 +1,37 @@
+import java.io.IOException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/MyServlet")
+public class add_customer extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String firstName = request.getParameter("first_name");
+        String lastName = request.getParameter("last_name");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        out.println("<html><head><title>Customer Information</title></head><body>");
+        out.println("<h1>Customer Information</h1>");
+        out.println("<p>First Name: " + firstName + "</p>");
+        out.println("<p>Last Name: " + lastName + "</p>");
+        out.println("<p>Address: " + address + "</p>");
+        out.println("<p>City: " + city + "</p>");
+        out.println("<p>State: " + state + "</p>");
+        out.println("<p>Email: " + email + "</p>");
+        out.println("<p>Phone: " + phone + "</p>");
+        out.println("</body></html>");
+    }
+}

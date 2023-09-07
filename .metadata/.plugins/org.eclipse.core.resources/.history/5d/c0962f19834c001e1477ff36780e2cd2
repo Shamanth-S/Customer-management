@@ -1,0 +1,71 @@
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/add_customer")
+public class add_customer extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    // JDBC URL, username, and password of MySQL server
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
+    private static final String JDBC_USER = "your_username";
+    private static final String JDBC_PASSWORD = "your_password";
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        
+        String firstName = request.getParameter("first_name");
+        String lastName = request.getParameter("last_name");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        try {
+            // Load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish a connection to the MySQL database
+            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+
+            // SQL query to insert customer data into the 'customers' table
+            String sql = "INSERT INTO customers (first_name, last_name, address, city, state, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, address);
+            preparedStatement.setString(4, city);
+            preparedStatement.setString(5, state);
+            preparedStatement.setString(6, email);
+            preparedStatement.setString(7, phone);
+
+            // Execute the SQL query to insert data
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            // Close the database connection
+            preparedStatement.close();
+            connection.close();
+            
+            if (rowsAffected > 0) {
+                // Data inserted successfully
+                response.getWriter().println("Customer information stored in the database.");
+            } else {
+                // Failed to insert data
+                response.getWriter().println("Failed to store customer information.");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            response.getWriter().println("Error: " + e.getMessage());
+        }
+    }
+}

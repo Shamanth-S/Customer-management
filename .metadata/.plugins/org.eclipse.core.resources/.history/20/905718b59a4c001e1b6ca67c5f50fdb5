@@ -1,0 +1,8 @@
+package net.javaguides.usermanagement.dao;
+
+public class UserDAO {
+	
+	private String JDBC_URL = "jdbc:mysql://localhost:3306/login_new";
+	private String JDBC_USERNAME = "root";
+	private String JDBC_PASSWORD = "root1234"
+}

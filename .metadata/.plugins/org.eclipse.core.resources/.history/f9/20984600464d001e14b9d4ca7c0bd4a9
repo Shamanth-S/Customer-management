@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Customer</title>
+</head>
+<body>
+	<form method = "POST" action = "Customer">
+		<table width = "400px" border = "1">
+		
+			<tr>
+				<td>Id</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>First name</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>Last name</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>Address</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>City</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>State</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>Email</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+			<tr>
+				<td>Phone</td>
+				<td><input type = "text" name = "id" id = "id"></td>
+			</tr>
+			
+		</table>
+	</form>
+</body>
+</html>

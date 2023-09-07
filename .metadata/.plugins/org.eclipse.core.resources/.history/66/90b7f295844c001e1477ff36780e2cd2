@@ -1,0 +1,62 @@
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/add_customer")
+public class add_customer extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        
+        String firstName = request.getParameter("first_name");
+        String lastName = request.getParameter("last_name");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        try {
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_new", "root", "root1234");
+			Statement st = conn.createStatement();
+
+            String sql = "INSERT INTO customers (first_name, last_name, address, city, state, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, address);
+            preparedStatement.setString(4, city);
+            preparedStatement.setString(5, state);
+            preparedStatement.setString(6, email);
+            preparedStatement.setString(7, phone);
+
+            // Execute the SQL query to insert data
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            // Close the database connection
+            preparedStatement.close();
+            conn.close();
+            
+            if (rowsAffected > 0) {
+                response.getWriter().println("Customer information stored in the database.");
+            } else {
+                response.getWriter().println("Failed to store customer information.");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            response.getWriter().println("Error: " + e.getMessage());
+        }
+    }
+}

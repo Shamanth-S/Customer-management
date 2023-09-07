@@ -1,0 +1,72 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/ViewCustomer")
+public class ViewCustomer extends HttpServlet{
+	
+	Connection conn;
+	PreparedStatement ps;
+	ResultSet rs;
+	int row;
+	
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException{
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_new","root","root1234");
+			
+			String query = "select * from login_new.customer";
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			
+			out.println("<table cellspacing = '0' width = '400px' border = '1'>");
+			out.println("<tr>");
+			out.println("<td>Id</td>");
+			out.println("<td>First Name</td>");
+			out.println("<td>Last Name</td>");
+			out.println("<td>Address</td>");
+			out.println("<td>City</td>");
+			out.println("<td>State</td>");
+			out.println("<td>Email</td>");
+			out.println("<td>Phone</td>");
+			out.println("<td>Edit</td>");
+			out.println("<td>Delete</td>");
+			out.println("</tr>");
+			
+			while (rs.next()) {
+				
+				out.println("<tr>");
+				out.println("<td>" + rs.getString("id") + "</td>");
+				out.println("<td>" + rs.getString("firstname") + "</td>");
+				out.println("<td>" + rs.getString("lastname") + "</td>");
+				out.println("<td>" + rs.getString("address") + "</td>");
+				out.println("<td>" + rs.getString("city") + "</td>");
+				out.println("<td>" + rs.getString("state") + "</td>");
+				out.println("<td>" + rs.getString("email") + "</td>");
+				out.println("<td>" + rs.getString("phone") + "</td>");
+				out.println("</tr>");
+			}
+			
+			out.println("</table>");	
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			out.print(e);
+		}
+	}
+}

@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Application</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark" style="background-color: black">
+            <div>
+                <a href="https://javaguides.net" class="navbar-brand"> App</a>
+            </div>
+
+            <ul>
+                <li><a href="<%=request.getContextPath() %>/list" class="nav-link">Users</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <div class="row">
+        <div class="container">
+            <h3 class="text-center">List of Users</h3>
+            <hr>
+            <div class="container text-left">
+                <a href="<%=request.getContextPath()%>/new" class="btn btn-success">Add New User</a>
+            </div>
+            <br>
+            <table class="table table-bordered" id="userTable">
+                <thread>
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thread>
+                <tbody>
+                    <!-- Use JavaScript to dynamically generate table rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Define your user data here (you can fetch it from a server using AJAX)
+        var users = [
+            <c:forEach var="user" items="${listUser}" varStatus="loop">
+                {
+                    id: <c:out value="${user.id}"/>,
+                    firstName: '<c:out value="${user.firstname}"/>',
+                    lastName: '<c:out value="${user.lastname}"/>',
+                    address: '<c:out value="${user.address}"/>',
+                    city: '<c:out value="${user.city}"/>',
+                    state: '<c:out value="${user.state}"/>',
+                    email: '<c:out value="${user.email}"/>',
+                    phone: '<c:out value="${user.phone}"/>'
+                }<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+        ];
+
+        // Function to populate the table with user data
+        function populateTable() {
+            var tableBody = document.querySelector('#userTable tbody');
+            tableBody.innerHTML = '';
+
+            users.forEach(function (user) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.address}</td>
+                    <td>${user.city}</td>
+                    <td>${user.state}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>
+                        <a href="edit?id=${user.id}">Edit</a>
+                        <a href="delete?id=${user.id}">Delete</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate the table when the page loads
+        window.onload = populateTable;
+    </script>
+</body>
+</html>

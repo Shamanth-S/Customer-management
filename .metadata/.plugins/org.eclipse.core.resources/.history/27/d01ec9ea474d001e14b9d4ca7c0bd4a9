@@ -1,0 +1,19 @@
+import java.io.IOException;
+import java.sql.Connection;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/Customer")
+public class Customer extends HttpServlet{
+	
+	Connection conn;
+	int row;
+	
+	public void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException{
+		
+	}
+}

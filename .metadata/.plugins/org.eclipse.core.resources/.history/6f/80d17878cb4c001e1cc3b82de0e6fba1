@@ -1,0 +1,8 @@
+<servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>net.javaguides.usermanagement.web.UserServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+</servlet-mapping>
